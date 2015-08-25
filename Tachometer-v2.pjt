@@ -1,0 +1,48 @@
+[PROJECT]
+Target=C:\Users\mkardasi\Documents\Projects\Tachometer\Tachometer-v2.hex
+Development_Mode=
+Processor_Text=PIC18F2420
+ToolSuite=CCS
+Processor=0x2420
+[C:\Users\mkardasi\Documents\Projects\Tachometer\Tachometer-v2]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[mru-list]
+1=C:\Users\mkardasi\Documents\Projects\Tachometer\Tachometer-v2.c
+[Windows]
+0=0000 %S 0 0 796 451 3 0
+[Opened Files]
+1=..\Ready4PIC\THC.c
+2=..\Ready4PIC\THC.h
+3=
+4=
+5=
+[debugperif]
+selected=Analog/Digital Conv
+[debugram]
+autoread=1
+[debugbreak]
+count=1
+f1=C:\Users\mkardasi\Documents\Projects\Tachometer\Tachometer-v2.c
+l1=129
+a.1=610
+[pcwdebug]
+watchcol0=75
+[debugwatch]
+count=1
+e1=CLT_Value
+[debugexpr]
+expr=
+sideeffects=0
+[debugsfr]
+autoread=1
+[Target Data]
+OptionString=-p +FH
+FileList=c:\users\mkardasi\documents\projects\tachometer\Tachometer-v2.c
+[Units]
+Count=1
+1=Tachometer-v2 (main)
