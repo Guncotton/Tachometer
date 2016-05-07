@@ -14,7 +14,12 @@
    RC2 = Input from Alternator
    RC6 = TxD
    RC7 = RxD
-
+   
+   Timer0 - Allocated to return the needle to zero when engine is turned off.
+   
+   Timer1 - Allocated to capture mode on CCP1. 4uS tick rate @ 8Mhz.
+   
+   Timer2 - Allocated to PWM mode CCP2. 4,132Hz frequency
 */
 
 #DEFINE FAN_ON    128
