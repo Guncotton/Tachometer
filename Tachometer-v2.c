@@ -61,9 +61,9 @@ void main(){
    
    set_tris_a(0b00000001);
    set_tris_b(0x00);          
-   set_tris_c(0b11000100);                               // C6/C7=RS-232. C2=CCP1. C0=Fan Rly.
+   set_tris_c(0b11000100); // C6/C7=RS-232. C2=CCP1. C0=Fan Rly.
    
-   output_b(0x01);                                       // LED On.  
+   output_b(0x01);         // LED On.  
    
    setup_adc_ports(AN0);
    setup_adc(ADC_CLOCK_INTERNAL);
@@ -93,13 +93,17 @@ void main(){
    while (TRUE){
 /*   
    Tachometer code.
+      1. Calc duty cycle based on time period.
+      2. Set duty cycle.
+      3. Reset no signal timer.
+      4. Clear service flag.
 */
       if (CCP1_Flag)
       {
-         PWM_Value = Compute_Duty_Cycle(CCP1_Delta);     // Calculate duty cycle based on frequency.
-         set_pwm2_duty(PWM_Value);                       // Set new duty cycle output.   
-         set_timer0(0);                                  // Reset timer.
-         CCP1_Flag = False;                              // Clear new data flag.
+         PWM_Value = Compute_Duty_Cycle(CCP1_Delta);
+         set_pwm2_duty(PWM_Value);   
+         set_timer0(0);
+         CCP1_Flag = False;
       }    
 /*
       Coolant temperature code.
