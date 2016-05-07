@@ -21,7 +21,11 @@
 
 #use rs232(baud=57600,parity=N,xmit=PIN_C6,rcv=PIN_C7,bits=8)
 
+/*
+Function Prototypes
+*/
 
+int8 Compute_Duty_Cycle(int16 Period);
 
 int8 Compute_Duty_Cycle(int16 Period){
 

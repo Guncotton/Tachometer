@@ -17,8 +17,8 @@
 
 */
 
-#DEFINE FAN_ON    128   //190F
-#DEFINE FAN_OFF   150   //180F
+#DEFINE FAN_ON    128
+#DEFINE FAN_OFF   150
 
 #include <Tachometer-v2.h>
 
@@ -28,7 +28,6 @@ int16 CCP1_Delta = 0;
 int16 CLT_Value = 1023;
 
 int1 CCP1_Flag;
-
 
 #INT_CCP1
 void Capture1_ISR(void){
