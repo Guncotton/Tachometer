@@ -64,7 +64,7 @@ void main(){
    set_adc_channel(0);
    
    setup_ccp2(CCP_PWM);
-   setup_timer_2(T2_DIV_BY_1, 120, 1);
+   setup_timer_2(T2_DIV_BY_4, 120, 1);
    set_pwm2_duty(24);
 
    setup_ccp1(CCP_CAPTURE_DIV_16);
