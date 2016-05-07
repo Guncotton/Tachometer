@@ -29,7 +29,6 @@ int16 CLT_Value = 1023;
 
 int1 CCP1_Flag;
 
-int8 Compute_Duty_Cycle(int16 Ticks);
 
 #INT_CCP1
 void Capture1_ISR(void){
@@ -43,7 +42,9 @@ void Capture1_ISR(void){
    CCP1_Delta >>= 4;                                        // Divide time period by 16 for average.
    CCP1_Flag = True;                                        // Set new data flag.
 }
-
+/*
+Timer0 Interrupt sets the gauge needle to zero
+*/
 #INT_TIMER0
 void Timer0_ISR(void){
    set_pwm2_duty(24);
@@ -85,18 +86,21 @@ void main(){
    delay_ms(1);                           // Delay to prevent spiking fan on during POR.
    
    while (TRUE){
-   
-      //Tachometer code.
+/*   
+   Tachometer code.
+*/
       if (CCP1_Flag)
       {
          PWM_Value = Compute_Duty_Cycle(CCP1_Delta);     // Calculate duty cycle based on frequency.
          set_pwm2_duty(PWM_Value);                       // Set new duty cycle output.   
          set_timer0(0);                                  // Reset timer.
          CCP1_Flag = False;                              // Clear new data flag.
-      }
-      
-      // Coolant temperature code.
-      delay_us(10);                                      // TAD delay.
+      }    
+/*
+      Coolant temperature code.
+*/
+      //TAD delay.
+      delay_us(10);
       CLT_Value = read_adc();
       
       if (CLT_Value < FAN_ON) {
