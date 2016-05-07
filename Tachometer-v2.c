@@ -38,19 +38,14 @@ void Capture1_ISR(void){
    int16 CCP1_Current_Value;
    
    CCP1_Current_Value = CCP_1;                              // Get capture value.
-   
    CCP1_Delta = CCP1_Current_Value - CCP1_Previous_Value;   // Delta T between captures.
-   
    CCP1_Previous_Value = CCP1_Current_Value;                // Store current capture value for next delta calc.
-   
    CCP1_Delta >>= 4;                                        // Divide time period by 16 for average.
-   
    CCP1_Flag = True;                                        // Set new data flag.
 }
 
 #INT_TIMER0
 void Timer0_ISR(void){
-   
    set_pwm2_duty(24);
 }
 
@@ -59,48 +54,35 @@ void main(){
    int8 PWM_Value;
    
    set_tris_a(0b00000001);
-   
    set_tris_b(0x00);          
-   
    set_tris_c(0b11000100);                               // C6/C7=RS-232. C2=CCP1. C0=Fan Rly.
    
    output_b(0x01);                                       // LED On.  
    
    setup_adc_ports(AN0);
-   
    setup_adc(ADC_CLOCK_INTERNAL);
-   
    set_adc_channel(0);
    
    setup_ccp2(CCP_PWM);
-   
    setup_timer_2(T2_DIV_BY_1, 120, 1);
-   
    set_pwm2_duty(24);
 
    setup_ccp1(CCP_CAPTURE_DIV_16);
-   
    setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);
   
    clear_interrupt(INT_TIMER0);
-   
    clear_interrupt(INT_CCP1);
    
    enable_interrupts(INT_TIMER0);   
-   
    enable_interrupts(INT_CCP1);
-     
-   enable_interrupts(GLOBAL);                                  // Enable interrupt servicing.
+   enable_interrupts(GLOBAL);             // Enable interrupt servicing.
    
-   printf("\033[2J\r\n");                                    // Clear Hyperterminal screen.
+   printf("\033[2J\r\nMain Loop\r\n");    // Clear Hyperterminal screen.
    
-   printf("Main Loop\r\n");
-   
-   setup_timer_0(T0_INTERNAL | T0_DIV_4);                      // Used to return tachometer to zero when engine is off.
-   
+   setup_timer_0(T0_INTERNAL | T0_DIV_4); // Used to return tachometer to zero when engine is off.
    set_timer0(0);
    
-   delay_ms(1);                                          // Delay to prevent spiking fan on during POR.
+   delay_ms(1);                           // Delay to prevent spiking fan on during POR.
    
    while (TRUE){
    
@@ -108,30 +90,24 @@ void main(){
       if (CCP1_Flag)
       {
          PWM_Value = Compute_Duty_Cycle(CCP1_Delta);     // Calculate duty cycle based on frequency.
-   
          set_pwm2_duty(PWM_Value);                       // Set new duty cycle output.   
-         
          set_timer0(0);                                  // Reset timer.
-         
          CCP1_Flag = False;                              // Clear new data flag.
       }
       
       // Coolant temperature code.
       delay_us(10);                                      // TAD delay.
-      
       CLT_Value = read_adc();
       
       if (CLT_Value < FAN_ON) {
          
-         if (input_state(PIN_C0) == 0) printf("FAN ON ");
-         
+         if (input_state(PIN_C0) == 0) printf("ON\r\n");
          output_high(PIN_C0);         
       }
       
       if (CLT_Value > FAN_OFF) {
          
-         if (input_state(PIN_C0) == 1) printf("FAN OFF ");
-      
+         if (input_state(PIN_C0) == 1) printf("OFF\r\n");
          output_low(PIN_C0);
       }
          
