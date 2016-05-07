@@ -51,7 +51,7 @@ void Timer0_ISR(void){
 
 void main(){
 
-   int8 PWM_Value;
+   int16 PWM_Value;
    
    set_tris_a(0b00000001);
    set_tris_b(0x00);          
@@ -104,17 +104,16 @@ void main(){
       
       if (CLT_Value < FAN_ON) {
          
-         if (input_state(PIN_C0) == 0) printf("ON\r\n");
+         if (input_state(PIN_C0) == 0) printf("ON:%Lu\r\n", CLT_Value);
          output_high(PIN_C0);         
       }
       
       if (CLT_Value > FAN_OFF) {
          
-         if (input_state(PIN_C0) == 1) printf("OFF\r\n");
+         if (input_state(PIN_C0) == 1) printf("OFF:%Lu\r\n", CLT_Value);
+               
          output_low(PIN_C0);
       }
-         
-      printf("%Lu\r\n", CLT_Value);
       
       sleep(SLEEP_IDLE);
    }
