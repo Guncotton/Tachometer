@@ -24,12 +24,11 @@
 
 #USE FAST_IO(ALL)
 
+
 int16 CCP1_Delta = 0;
 int16 CLT_Value = 1023;
-
 int1 CCP1_Flag;
 
-int8 Compute_Duty_Cycle(int16 Ticks);
 
 #INT_CCP1
 void Capture1_ISR(void){
@@ -77,7 +76,7 @@ void main(){
    enable_interrupts(INT_CCP1);
    enable_interrupts(GLOBAL);             // Enable interrupt servicing.
    
-   printf("\033[2J\r\nMain Loop\r\n");    // Clear Hyperterminal screen.
+   printf("\033[2J");    // Clear Hyperterminal screen.
    
    setup_timer_0(T0_INTERNAL | T0_DIV_4); // Used to return tachometer to zero when engine is off.
    set_timer0(0);
@@ -111,7 +110,7 @@ void main(){
          output_low(PIN_C0);
       }
          
-      printf("%Lu\r\n", CLT_Value);
+      printf("%Lu\033[H", CLT_Value);
       
       sleep(SLEEP_IDLE);
    }
