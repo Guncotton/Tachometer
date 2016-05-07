@@ -19,6 +19,7 @@
 
 #DEFINE FAN_ON    128
 #DEFINE FAN_OFF   150
+#DEFINE PWM_ZERO      24
 
 #include <Tachometer-v2.h>
 
@@ -46,7 +47,7 @@ Timer0 Interrupt sets the gauge needle to zero
 */
 #INT_TIMER0
 void Timer0_ISR(void){
-   set_pwm2_duty(24);
+   set_pwm2_duty(PWM_ZERO);
 }
 
 void main(){
@@ -65,7 +66,7 @@ void main(){
    
    setup_ccp2(CCP_PWM);
    setup_timer_2(T2_DIV_BY_4, 120, 1);
-   set_pwm2_duty(24);
+   set_pwm2_duty(PWM_ZERO);
 
    setup_ccp1(CCP_CAPTURE_DIV_16);
    setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);

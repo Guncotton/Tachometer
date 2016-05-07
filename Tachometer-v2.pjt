@@ -18,7 +18,7 @@ AdditionalOptionString=
 [Opened Files]
 1=Tachometer-v2.c
 2=Tachometer-v2.h
-3=
+3=..\..\..\..\..\Program Files (x86)\PICC\devices\18F2420.h
 4=
 5=
 [debugperif]
