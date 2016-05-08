@@ -26,15 +26,16 @@ selected=Analog/Digital Conv
 [debugram]
 autoread=1
 [debugbreak]
-count=1
-f1=C:\Users\mkardasi\Documents\Projects\Tachometer\Tachometer-v2.c
-l1=129
-a.1=610
+count=0
+f1=C:\Users\mkardasi\Documents\Tachometer Project\Source Code\Tachometer-v2.c
+l1=87
+a.1=1006
 [pcwdebug]
 watchcol0=75
 [debugwatch]
-count=1
+count=0
 e1=CLT_Value
+e2=__PCH__
 [debugexpr]
 expr=
 sideeffects=0

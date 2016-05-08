@@ -22,10 +22,22 @@
 #use rs232(baud=57600,parity=N,xmit=PIN_C6,rcv=PIN_C7,bits=8)
 
 /*
+<<<<<<< HEAD
 Function Prototypes
 */
 
 int8 Compute_Duty_Cycle(int16 Period);
+=======
+      Prototypes
+*/
+int8 Compute_Duty_Cycle(int16 Ticks);
+void MCU_Init();
+int16 Calc_RPM(int16 Period);
+
+/*
+      Functions
+*/
+>>>>>>> 5339bf93a1edfc4c17082308e5c822d9ccffc8f6
 
 int8 Compute_Duty_Cycle(int16 Period){
 
@@ -37,3 +49,47 @@ int8 Compute_Duty_Cycle(int16 Period){
    
    return Duty_Cycle;
 }
+
+int16 Calc_RPM(int16 input){
+
+   int16 result;
+   
+   result = 883375 / input;
+   
+   return result;
+}
+
+ void MCU_Init(){
+
+   set_tris_a(0b00000001);
+   set_tris_b(0x00);          
+   set_tris_c(0b11000100);                               // C6/C7=RS-232. C2=CCP1. C0=Fan Rly.
+   
+   output_b(0x01);                                       // LED On.  
+   
+   setup_adc_ports(AN0);
+   setup_adc(ADC_CLOCK_INTERNAL);
+   set_adc_channel(0);
+   
+   setup_ccp2(CCP_PWM);
+   setup_timer_2(T2_DIV_BY_1, 120, 1);
+   set_pwm2_duty(24);
+
+   setup_ccp1(CCP_CAPTURE_DIV_16);
+   setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);
+  
+   clear_interrupt(INT_TIMER0);
+   clear_interrupt(INT_CCP1);
+   
+   enable_interrupts(INT_TIMER0);   
+   enable_interrupts(INT_CCP1);
+   enable_interrupts(GLOBAL);             // Enable interrupt servicing.
+   
+   setup_timer_0(T0_INTERNAL | T0_DIV_4); // Used to return tachometer to zero when engine is off.
+   set_timer0(0);
+         
+   printf("\033[2J\033[H"); // Clear Hyperterminal screen.
+   printf("RPM: 0\t\tCoolant: 0\tFan:OFF");   
+   
+   delay_ms(1);   // Delay to prevent spiking fan on during POR.
+}  
