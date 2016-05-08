@@ -17,8 +17,8 @@
 
 */
 
-#DEFINE FAN_ON    128   //190F
-#DEFINE FAN_OFF   150   //180F
+#DEFINE FAN_ON    125 //210 on gauge
+#DEFINE FAN_OFF   170
 
 #include <Tachometer-v2.h>
 
@@ -27,6 +27,7 @@
 
 int16 CCP1_Delta = 0;
 int16 CLT_Value = 1023;
+int16 RPM = 0;
 int1 CCP1_Flag;
 
 
@@ -50,39 +51,10 @@ void Timer0_ISR(void){
 
 void main(){
 
-   int8 PWM_Value;
+   int8 PWM_Value = 23;
    
-   set_tris_a(0b00000001);
-   set_tris_b(0x00);          
-   set_tris_c(0b11000100);                               // C6/C7=RS-232. C2=CCP1. C0=Fan Rly.
-   
-   output_b(0x01);                                       // LED On.  
-   
-   setup_adc_ports(AN0);
-   setup_adc(ADC_CLOCK_INTERNAL);
-   set_adc_channel(0);
-   
-   setup_ccp2(CCP_PWM);
-   setup_timer_2(T2_DIV_BY_1, 120, 1);
-   set_pwm2_duty(24);
-
-   setup_ccp1(CCP_CAPTURE_DIV_16);
-   setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);
-  
-   clear_interrupt(INT_TIMER0);
-   clear_interrupt(INT_CCP1);
-   
-   enable_interrupts(INT_TIMER0);   
-   enable_interrupts(INT_CCP1);
-   enable_interrupts(GLOBAL);             // Enable interrupt servicing.
-   
-   printf("\033[2J");    // Clear Hyperterminal screen.
-   
-   setup_timer_0(T0_INTERNAL | T0_DIV_4); // Used to return tachometer to zero when engine is off.
-   set_timer0(0);
-   
-   delay_ms(1);                           // Delay to prevent spiking fan on during POR.
-   
+   MCU_Init();
+        
    while (TRUE){
    
       //Tachometer code.
@@ -98,19 +70,23 @@ void main(){
       delay_us(10);                                      // TAD delay.
       CLT_Value = read_adc();
       
-      if (CLT_Value < FAN_ON) {
-         
-         if (input_state(PIN_C0) == 0) printf("ON\r\n");
-         output_high(PIN_C0);         
+      //Turn fan on.
+      if (CLT_Value < FAN_ON){
+         output_high(PIN_C0);
+         if (input_state(PIN_C0) == 1) printf("\033[1;37H ON");
       }
       
-      if (CLT_Value > FAN_OFF) {
-         
-         if (input_state(PIN_C0) == 1) printf("OFF\r\n");
+      //Turn fan off.
+      if (CLT_Value > FAN_OFF){
          output_low(PIN_C0);
+         if (input_state(PIN_C0) == 0) printf("\033[1;37HOFF");
       }
-         
-      printf("%Lu\033[H", CLT_Value);
+      
+      //Compute rom to nearest integer.
+      RPM = Calc_RPM(CCP1_Delta);
+      
+      //Update serial display.
+      printf("\033[1;6H%Lu \033[1;26H%Lu", RPM, CLT_Value);
       
       sleep(SLEEP_IDLE);
    }
