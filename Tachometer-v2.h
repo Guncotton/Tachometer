@@ -71,6 +71,10 @@ int16 Calc_RPM(int16 input){
 
    setup_ccp1(CCP_CAPTURE_DIV_16);
    setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);
+   
+   set_pwm2_duty(75);
+   delay_ms(200);
+   set_pwm2_duty(PWM_ZERO);
   
    clear_interrupt(INT_TIMER0);
    clear_interrupt(INT_CCP1);

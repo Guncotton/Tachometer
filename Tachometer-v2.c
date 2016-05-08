@@ -23,8 +23,8 @@
 */
 
 #DEFINE FAN_ON       125
-#DEFINE FAN_OFF      150
-#DEFINE PWM_ZERO     24
+#DEFINE FAN_OFF      160
+#DEFINE PWM_ZERO     25
 
 #include <Tachometer-v2.h>
 
@@ -60,7 +60,7 @@ void Timer0_ISR(void){
 
 void main(){
 
-   int16 PWM_Value = PWM_ZERO;
+   int8 PWM_Value;
    
    MCU_Init();
         
@@ -75,7 +75,7 @@ void main(){
       if (CCP1_Flag)
       {
          PWM_Value = Compute_Duty_Cycle(CCP1_Delta);
-         set_pwm2_duty(PWM_Value);   
+         set_pwm2_duty(PWM_Value);
          set_timer0(0);
          CCP1_Flag = False;
       }    
