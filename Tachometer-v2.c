@@ -22,9 +22,9 @@
    Timer2 - Allocated to PWM mode CCP2. 4,132Hz frequency
 */
 
-#DEFINE FAN_ON    128
-#DEFINE FAN_OFF   150
-#DEFINE PWM_ZERO      24
+#DEFINE FAN_ON       128
+#DEFINE FAN_OFF      150
+#DEFINE PWM_ZERO     24
 
 #include <Tachometer-v2.h>
 
