@@ -22,22 +22,16 @@
 #use rs232(baud=57600,parity=N,xmit=PIN_C6,rcv=PIN_C7,bits=8)
 
 /*
-<<<<<<< HEAD
 Function Prototypes
 */
 
 int8 Compute_Duty_Cycle(int16 Period);
-=======
-      Prototypes
-*/
-int8 Compute_Duty_Cycle(int16 Ticks);
 void MCU_Init();
 int16 Calc_RPM(int16 Period);
 
 /*
       Functions
 */
->>>>>>> 5339bf93a1edfc4c17082308e5c822d9ccffc8f6
 
 int8 Compute_Duty_Cycle(int16 Period){
 
