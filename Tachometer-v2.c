@@ -14,11 +14,17 @@
    RC2 = Input from Alternator
    RC6 = TxD
    RC7 = RxD
-
+   
+   Timer0 - Allocated to return the needle to zero when engine is turned off.
+   
+   Timer1 - Allocated to capture mode on CCP1. 4uS tick rate @ 8Mhz.
+   
+   Timer2 - Allocated to PWM mode CCP2. 4,132Hz frequency
 */
 
-#DEFINE FAN_ON    125 //210 on gauge
-#DEFINE FAN_OFF   170
+#DEFINE FAN_ON       125
+#DEFINE FAN_OFF      150
+#DEFINE PWM_ZERO     24
 
 #include <Tachometer-v2.h>
 
@@ -44,32 +50,42 @@ void Capture1_ISR(void){
    CCP1_Flag = True;                                        // Set new data flag.
 }
 
+/*
+Timer0 Interrupt sets the gauge needle to zero
+*/
 #INT_TIMER0
 void Timer0_ISR(void){
-   set_pwm2_duty(24);
+   set_pwm2_duty(PWM_ZERO);
 }
 
 void main(){
 
-   int8 PWM_Value = 23;
+   int16 PWM_Value = PWM_ZERO;
    
    MCU_Init();
         
    while (TRUE){
-   
-      //Tachometer code.
+/*   
+   Tachometer code.
+      1. Calc duty cycle based on time period.
+      2. Set duty cycle.
+      3. Reset no signal timer.
+      4. Clear service flag.
+*/
       if (CCP1_Flag)
       {
-         PWM_Value = Compute_Duty_Cycle(CCP1_Delta);     // Calculate duty cycle based on frequency.
-         set_pwm2_duty(PWM_Value);                       // Set new duty cycle output.   
-         set_timer0(0);                                  // Reset timer.
-         CCP1_Flag = False;                              // Clear new data flag.
-      }
-      
-      // Coolant temperature code.
-      delay_us(10);                                      // TAD delay.
+         PWM_Value = Compute_Duty_Cycle(CCP1_Delta);
+         set_pwm2_duty(PWM_Value);   
+         set_timer0(0);
+         CCP1_Flag = False;
+      }    
+/*
+      Coolant temperature code.
+*/
+      //TAD delay.
+      delay_us(10);
       CLT_Value = read_adc();
-      
+               
       //Turn fan on.
       if (CLT_Value < FAN_ON){
          output_high(PIN_C0);
@@ -81,8 +97,8 @@ void main(){
          output_low(PIN_C0);
          if (input_state(PIN_C0) == 0) printf("\033[1;37HOFF");
       }
-      
-      //Compute rom to nearest integer.
+
+      //Compute rpm to nearest integer.
       RPM = Calc_RPM(CCP1_Delta);
       
       //Update serial display.

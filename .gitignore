@@ -41,3 +41,14 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# CCS Compiler Files
+*.bak
+*.STA
+*.cof
+*.err
+*.esym
+*.hex
+*.lst
+*.sym
+*.tre
