@@ -23,8 +23,8 @@
 */
 
 #DEFINE FAN_ON       125
-#DEFINE FAN_OFF      160
-#DEFINE PWM_ZERO     25
+#DEFINE FAN_OFF      190
+#DEFINE PWM_ZERO     23
 
 #include <Tachometer-v2.h>
 

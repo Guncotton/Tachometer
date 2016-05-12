@@ -57,9 +57,10 @@ int16 Calc_RPM(int16 input){
 
    set_tris_a(0b00000001);
    set_tris_b(0x00);          
-   set_tris_c(0b11000100);                               // C6/C7=RS-232. C2=CCP1. C0=Fan Rly.
+   set_tris_c(0b11000100);          // C6/C7=RS-232. C2=CCP1. C0=Fan Rly.
    
-   output_b(0x01);                                       // LED On.  
+   output_b(0x01);                  //LED On.
+   output_low(PIN_C0);              //Fan off.
    
    setup_adc_ports(AN0);
    setup_adc(ADC_CLOCK_INTERNAL);
@@ -67,13 +68,13 @@ int16 Calc_RPM(int16 input){
    
    setup_ccp2(CCP_PWM);
    setup_timer_2(T2_DIV_BY_1, 120, 1);
-   set_pwm2_duty(24);
+   set_pwm2_duty(PWM_ZERO);
 
    setup_ccp1(CCP_CAPTURE_DIV_16);
    setup_timer_1(T1_INTERNAL | T1_DIV_BY_8);
    
-   set_pwm2_duty(75);
-   delay_ms(200);
+   set_pwm2_duty(50);
+   delay_ms(250);
    set_pwm2_duty(PWM_ZERO);
   
    clear_interrupt(INT_TIMER0);
